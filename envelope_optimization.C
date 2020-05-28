@@ -940,9 +940,9 @@ void separation_opt(bool fit){
                     y_errors_upper.push_back(getYError(xbin_idx, ybin_idx_upper, seed_eta_idx, loget_idx));
 
                 }
-                if (envelope_biny_lower != -1){
+                if (ybin_idx_lower != -1){
                     float envelope_x_lower = caloClusters_shape_etWeight[seed_eta_idx][loget_idx] -> GetXaxis() -> GetBinCenter(xbin_idx),
-                          envelope_y_lower = caloClusters_shape_etWeight[seed_eta_idx][loget_idx] -> GetYaxis() -> GetBinCenter(envelope_biny_lower);
+                          envelope_y_lower = caloClusters_shape_etWeight[seed_eta_idx][loget_idx] -> GetYaxis() -> GetBinCenter(ybin_idx_lower);
 
                     x_points_lower.push_back(envelope_x_lower);
                     x_errors_lower.push_back(getXError(xbin_idx, ybin_idx_lower, seed_eta_idx, loget_idx));
