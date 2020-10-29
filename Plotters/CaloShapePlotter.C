@@ -41,6 +41,9 @@
            maxSeedEta = 3.0, 
            minLogE = -2.0, 
            maxLogE = 1.0;
+    
+    double maximum_val = 0.0174;
+    double minimum_val = -0.0087;
 
     vector<double> midEtas,     //[seedEtaBins]
                    midLogEs;    //[logEBins]
@@ -85,6 +88,8 @@
                   phase1_scale   = {0.5656,  0.7131,  44.04,   13.17},
                   phase1_xoffset = {0.2931,  0.01668, -5.326,  -7.037},
                   phase1_width   = {0.2976,  0.4114,  1.184,   2.836};
+
+    vector<string> titles_etas, titles_loge, filename_etas, filename_loges;
 
 void setOutput(string path){
     if (mkdir(path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1){
@@ -227,9 +232,9 @@ void plotRegionalCurves(int aveIdx = 0){
             gStyle->SetOptStat(0);
             legends[seed_eta_idx][loge_idx] = new TLegend(-0.55,-0.14,-0.3,-0.05,"","");
 
-            caloClusters_shape_etWeight[seed_eta_idx][loge_idx] -> SetTitle((titles_etas[seed_eta_idx] + "     " + titles_loge[loge_idx]).c_str());
-            caloClusters_shape_etWeight[seed_eta_idx][loge_idx] -> GetXaxis() -> SetTitle("dPhi");
-            caloClusters_shape_etWeight[seed_eta_idx][loge_idx] -> GetYaxis() -> SetTitle("dEta");
+            caloClusters_shape_eBins_etWeight[seed_eta_idx][loge_idx] -> SetTitle((titles_etas[seed_eta_idx] + "     " + titles_loge[loge_idx]).c_str());
+            caloClusters_shape_eBins_etWeight[seed_eta_idx][loge_idx] -> GetXaxis() -> SetTitle("dPhi");
+            caloClusters_shape_eBins_etWeight[seed_eta_idx][loge_idx] -> GetYaxis() -> SetTitle("dEta");
 
             upperParabolaLocal[seed_eta_idx][loge_idx] -> SetLineWidth(4);
             lowerParabolaLocal[seed_eta_idx][loge_idx] -> SetLineWidth(4);
@@ -260,7 +265,7 @@ void plotRegionalCurves(int aveIdx = 0){
             legends[seed_eta_idx][loge_idx] -> AddEntry(upperParabolaAveraged[seed_eta_idx][loge_idx], (averageTitles[aveIdx]+"Averaged Parameters").c_str(),"l");
             legends[seed_eta_idx][loge_idx] -> AddEntry(upperParabolaPhase1[seed_eta_idx][loge_idx], "Phase 1 Parameters","l");
 
-            caloClusters_shape_etWeight[seed_eta_idx][loge_idx] -> Draw("COLZ");
+            caloClusters_shape_eBins_etWeight[seed_eta_idx][loge_idx] -> Draw("COLZ");
             legends[seed_eta_idx][loge_idx] -> Draw("SAME");
             upperParabolaPhase1[seed_eta_idx][loge_idx] -> Draw("SAME");
             lowerParabolaPhase1[seed_eta_idx][loge_idx] -> Draw("SAME");
@@ -302,17 +307,17 @@ void parabolaCompareHeatMap(){
             for(int loge_idx = 0; loge_idx < logEBins; loge_idx++){ 
                 if(fitPlot[seed_eta_idx][loge_idx] == false) continue;
 
-                float local_up_dEta = upper_parabola_dEtaValue(fit_w00_up[seed_eta_idx][loge_idx],
-                                                               fit_w01_up[seed_eta_idx][loge_idx],
-                                                               fit_w10_up[seed_eta_idx][loge_idx],
-                                                               fit_w11_up[seed_eta_idx][loge_idx],
+                float local_up_dEta = upper_parabola_dEtaValue(new_upperParams_local[seed_eta_idx][loge_idx][0],
+                                                               new_upperParams_local[seed_eta_idx][loge_idx][1],
+                                                               new_upperParams_local[seed_eta_idx][loge_idx][2],
+                                                               new_upperParams_local[seed_eta_idx][loge_idx][3],
                                                                midLogEs[loge_idx],
                                                                midEtas[seed_eta_idx],
                                                                0);//xVal) 
-                float local_low_dEta = lower_parabola_dEtaValue(fit_w00_low[seed_eta_idx][loge_idx],
-                                                                fit_w01_low[seed_eta_idx][loge_idx],
-                                                                fit_w10_low[seed_eta_idx][loge_idx],
-                                                                fit_w11_low[seed_eta_idx][loge_idx],
+                float local_low_dEta = lower_parabola_dEtaValue(new_lowerParams_local[seed_eta_idx][loge_idx][0],
+                                                                new_lowerParams_local[seed_eta_idx][loge_idx][1],
+                                                                new_lowerParams_local[seed_eta_idx][loge_idx][2],
+                                                                new_lowerParams_local[seed_eta_idx][loge_idx][3],
                                                                 midLogEs[loge_idx],
                                                                 midEtas[seed_eta_idx],
                                                                 0);//xVal)   
@@ -469,9 +474,9 @@ void Plot(){
             legends[seed_eta_idx][loge_idx] = new TLegend(-0.55,-0.14,-0.3,-0.08,"","");
             legends_dPhi[seed_eta_idx][loge_idx] = new TLegend(0.3,-0.14,0.55,-0.08,"","");
 
-            caloClusters_shape_etWeight[seed_eta_idx][loge_idx] -> SetTitle((titles_etas[seed_eta_idx] + "     " + titles_loge[loge_idx]).c_str());
-            caloClusters_shape_etWeight[seed_eta_idx][loge_idx] -> GetXaxis() -> SetTitle("dPhi");
-            caloClusters_shape_etWeight[seed_eta_idx][loge_idx] -> GetYaxis() -> SetTitle("dEta");
+            caloClusters_shape_eBins_etWeight[seed_eta_idx][loge_idx] -> SetTitle((titles_etas[seed_eta_idx] + "     " + titles_loge[loge_idx]).c_str());
+            caloClusters_shape_eBins_etWeight[seed_eta_idx][loge_idx] -> GetXaxis() -> SetTitle("dPhi");
+            caloClusters_shape_eBins_etWeight[seed_eta_idx][loge_idx] -> GetYaxis() -> SetTitle("dEta");
 
             fit_curves_upper[seed_eta_idx][loge_idx] -> SetLineWidth(4);
             fit_curves_lower[seed_eta_idx][loge_idx] -> SetLineWidth(4);
@@ -504,7 +509,7 @@ void Plot(){
             legends_dPhi[seed_eta_idx][loge_idx] -> AddEntry(fit_dPhi_left[seed_eta_idx][loge_idx], "DPhi Window - Optimized","l");
             legends_dPhi[seed_eta_idx][loge_idx] -> AddEntry(phase1_dPhi_left[seed_eta_idx][loge_idx], "DPhi Window - Phase 1","l");
 
-            caloClusters_shape_etWeight[seed_eta_idx][loge_idx] -> Draw("COLZ");
+            caloClusters_shape_eBins_etWeight[seed_eta_idx][loge_idx] -> Draw("COLZ");
             legends[seed_eta_idx][loge_idx] -> Draw("SAME");
             legends_dPhi[seed_eta_idx][loge_idx] -> Draw("SAME");
 

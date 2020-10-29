@@ -79,10 +79,10 @@ def main():
                       averagedParameterFile,
                       dPhiParameterFile] 
 
-    #if runAnalyzer:
-    print("Running Analyzer")
-    analyzer = runMacro('Analyzers/EnvelopeAnalyzer.C++', analyzerArgList)
-    analyzer.wait()
+    if runAnalyzer:
+        print("Running Analyzer")
+        analyzer = runMacro('Analyzers/EnvelopeAnalyzer.C++', analyzerArgList)
+        analyzer.wait()
 
     if runOptimization:
         print("Running Optimizer")

@@ -126,7 +126,7 @@
         //3 = Cluster Energy
         //4 = Eta
 
-    string weightTitles[weightNum] = { "UNWEIGHTED","TOTALCLUSTER", "CLUSTERET", "CLUSTEREN", "ETA" };
+    string weightTitles[] = { "UNWEIGHTED","TOTALCLUSTER", "CLUSTERET", "CLUSTEREN", "ETA" };
 
     vector<vector<float>> fit_w00_upper_weighted(weightNum);
     vector<vector<float>> fit_w01_upper_weighted(weightNum);
@@ -313,8 +313,8 @@ vector<float> XErrors(int xBin, int yBin, int etaBin, int logetBin){
     errors.push_back(0.0);  //no errors
 
     //width errors
-    float sum = caloClusters_shape_xAxisWeight_Numerator[etaBin][logetBin] -> Integral(xBin, xBin, yBin, yBin);
-    float total_entries = caloClusters_shape_xAxisWeight_Denom[etaBin][logetBin] -> Integral(xBin, xBin, yBin, yBin);
+    float sum = 1;//caloClusters_shape_xAxisWeight_Numerator[etaBin][logetBin] -> Integral(xBin, xBin, yBin, yBin);
+    float total_entries = 1;//caloClusters_shape_xAxisWeight_Denom[etaBin][logetBin] -> Integral(xBin, xBin, yBin, yBin);
 
     errors.push_back(sum / total_entries);
 
@@ -639,7 +639,7 @@ void separationOptimization(bool fit, int error=0, bool ringRejection=0, bool bi
                                     << phase1_sepPars[3] << endl;
                 continue;
             }
-            curr_logET = mid_logets.at(loge_idx);
+            curr_logET = mid_loges.at(loge_idx);
             curr_seedEta = mid_etas.at(seed_eta_idx);
 
             //fitting
@@ -987,7 +987,7 @@ void final_params_dPhi(){
 
     dPhiParam_outfile << "ETA_BIN\tYOFFSET\tSCALE\tXOFFSET\tWIDTH"<<endl;
 
-    string eta_bins = {"EB", "EE_0", "EE_1", "EE_2"};
+    string eta_bins[] = {"EB", "EE_0", "EE_1", "EE_2"};
 
     for(int i = 0; i < 4; i++){
         dPhiParam_outfile << eta_bins[i] << "\t"
@@ -1000,7 +1000,7 @@ void final_params_dPhi(){
 }
 
 void ReadInfile(string inputFile){
-    TFile *hist_infile = TFile::Open(inputFile);
+    TFile *hist_infile = TFile::Open(inputFile.c_str());
 
     double seedEtaStep = (maxSeedEta - minSeedEta) / seedEtaBins;
     double logEStep = (maxLogE - minLogE) / logEBins;
@@ -1027,7 +1027,7 @@ void ReadInfile(string inputFile){
 
         std::ostringstream ss;
         ss << std::setw(3) << std::setfill('0') << to_string(logEIdx);
-        filename_loges[seedEtaIdx] = ss.str();
+        filename_loges[logEIdx] = ss.str();
     }
 
     fitPlot.resize(seedEtaBins, vector<bool>(logEBins, false));
@@ -1080,7 +1080,7 @@ void EnvelopeOptimizer(string inputFile, string outputFile, string localParamOut
     dPhiParam_outfile.open(dPhiParamOutFile, std::ofstream::out | std::ofstream::trunc);
     
     ReadInfile(inputFile);
-    separation_opt_eBins(1,errorType,ringRejection,binRejection);
+    separationOptimization(1,errorType,ringRejection,binRejection);
                   //(bool fit, int error=0, bool ringRejection=0, bool binRejection=0)
     dPhiOptimization();
     averageSeparationParams();

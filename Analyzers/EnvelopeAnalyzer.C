@@ -100,35 +100,6 @@
     vector<float> fit_w10_lower;
     vector<float> fit_w11_lower;
 
-
-    string titles_etas[15] = { "0 < |#eta| #leq 0.2",   "0.2 < |#eta| #leq 0.4", "0.4 < |#eta| #leq 0.6", 
-                               "0.6 < |#eta| #leq 0.8", "0.8 < |#eta| #leq 1",   "1 < |#eta| #leq 1.2", 
-                               "1.2 < |#eta| #leq 1.4", "1.4 < |#eta| #leq 1.6", "1.6 < |#eta| #leq 1.8", 
-                               "1.8 < |#eta| #leq 2",   "2 < |#eta| #leq 2.2",   "2.2 < |#eta| #leq 2.4", 
-                               "2.4 < |#eta| #leq 2.6", "2.6 < |#eta| #leq 2.8", "2.8 < |#eta| #leq 3" };
-
-    string titles_loget[15] = { "-1 < log_{10}(E_{T}) < -0.8",      "-0.8 #leq log_{10}(E_{T}) < -0.6", 
-                                "-0.6 #leq log_{10}(E_{T}) < -0.4", "-0.4 #leq log_{10}(E_{T}) < -0.2", 
-                                "-0.2 #leq log_{10}(E_{T}) < 0",    "0 < log_{10}(E_{T}) < 0.2", 
-                                "0.2 #leq log_{10}(E_{T}) < 0.4",   "0.4 #leq log_{10}(E_{T}) < 0.6", 
-                                "0.6 #leq log_{10}(E_{T}) < 0.8",   "0.8 #leq log_{10}(E_{T}) < 1",
-                                "1 < log_{10}(E_{T}) < 1.2",        "1.2 #leq log_{10}(E_{T}) < 1.4", 
-                                "1.4 #leq log_{10}(E_{T}) < 1.6",   "1.6 #leq log_{10}(E_{T}) < 1.8", 
-                                "1.8 #leq log_{10}(E_{T}) < 2" };
-
-    string filename_etas[15] = { "00", "01", "02", "03", "04", "05", "06", "07", "08", 
-                                 "09", "10", "11", "12", "13", "14" };
-
-    string filename_loget[15] = { "-1 < log_{10}(E_{T}) < -0.8",      "-0.8 #leq log_{10}(E_{T}) < -0.6", 
-                                "-0.6 #leq log_{10}(E_{T}) < -0.4", "-0.4 #leq log_{10}(E_{T}) < -0.2", 
-                                "-0.2 #leq log_{10}(E_{T}) < 0",    "0 < log_{10}(E_{T}) < 0.2", 
-                                "0.2 #leq log_{10}(E_{T}) < 0.4",   "0.4 #leq log_{10}(E_{T}) < 0.6", 
-                                "0.6 #leq log_{10}(E_{T}) < 0.8",   "0.8 #leq log_{10}(E_{T}) < 1",
-                                "1 < log_{10}(E_{T}) < 1.2",        "1.2 #leq log_{10}(E_{T}) < 1.4", 
-                                "1.4 #leq log_{10}(E_{T}) < 1.6",   "1.6 #leq log_{10}(E_{T}) < 1.8", 
-                                "1.8 #leq log_{10}(E_{T}) < 2" };
-
-
 /* Tree Values */
     vector<int>     *genParticle_id;
     vector<float>   *genParticle_energy;
@@ -505,7 +476,7 @@ void EventLoop(){
                 }
 
 
-                if(logET_bin < 0 || seedEta_bin < 0) continue;
+                if(logE_bin < 0 || seedEta_bin < 0) continue;
 
                 //fill histograms
 
@@ -513,7 +484,7 @@ void EventLoop(){
                 caloClusters_shape_eBins_eWeight[seedEta_bin][logE_bin] -> Fill(dPhi, dEta, ePF);
                 caloClusters_shape_eBins[seedEta_bin][logE_bin] -> Fill(dPhi, dEta);
 
-                int dPhiBin = caloClusters_shape_etWeight[seedEta_bin][logET_bin] -> GetXaxis() -> FindBin(dPhi);
+                int dPhiBin = caloClusters_shape_eBins_etWeight[seedEta_bin][logE_bin] -> GetXaxis() -> FindBin(dPhi);
                 caloClusters_eBins_dEtaDist[seedEta_bin][logE_bin][dPhiBin] -> Fill(dEta, etPF);
 
                 int logETBin = cluster_dPhi_vs_loget[dPhi_bin] -> GetXaxis() -> FindBin(logET);
@@ -741,8 +712,8 @@ void EnvelopeAnalyzer(string inputFile, string outputFile){
 //main program
 
     InitHistograms();
-    InitTree(inputFile); 
-    SaveHistograms(outputFile);
+    InitTree(inputFile.c_str()); 
+    SaveHistograms(outputFile.c_str());
 
     fit_outfile.close();
 }
