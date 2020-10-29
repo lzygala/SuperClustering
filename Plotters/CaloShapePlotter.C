@@ -663,9 +663,9 @@ void ReadInfile(string inputFile){
 
 void ReadInParameters(std::string localParamFileName, std::string aveParamFileName, std::string dPhiParamFileName){
 
-    ofstream aveParam_infile;
-    ofstream localParam_infile;
-    ofstream dPhiParam_infile;
+    ifstream aveParam_infile;
+    ifstream localParam_infile;
+    ifstream dPhiParam_infile;
 
     aveParam_infile.open(aveParamFileName, std::ofstream::in | std::ofstream::trunc);
     localParam_infile.open(localParamFileName, std::ofstream::in | std::ofstream::trunc);
@@ -682,6 +682,7 @@ void ReadInParameters(std::string localParamFileName, std::string aveParamFileNa
         getline(aveParam_infile, curLine);
         istringstream iss(curLine);
         vector<string> tokens;
+        string token;
         while(std::getline(iss, token, '\t'))
             tokens.push_back(token);
         averageTitles.push_back(tokens.at(0));
@@ -700,11 +701,12 @@ void ReadInParameters(std::string localParamFileName, std::string aveParamFileNa
         getline(localParam_infile, curLine);
         istringstream iss(curLine);
         vector<string> tokens;
+        string token;
         while(std::getline(iss, token, '\t'))
             tokens.push_back(token);
 
-        std::vector<int>::iterator seedEta = std::find(midEtas.begin(), midEtas.end(), std::stod(tokens.at(0)));
-        std::vector<int>::iterator logE = std::find(midLogEs.begin(), midLogEs.end(), std::stod(tokens.at(1)));
+        std::vector<double>::iterator seedEta = std::find(midEtas.begin(), midEtas.end(), std::stod(tokens.at(0)));
+        std::vector<double>::iterator logE = std::find(midLogEs.begin(), midLogEs.end(), std::stod(tokens.at(1)));
         int seedEtaIdx = std::distance(midEtas.begin(), seedEta);
         int logEIdx = std::distance(midLogEs.begin(), logE);
         
@@ -712,16 +714,16 @@ void ReadInParameters(std::string localParamFileName, std::string aveParamFileNa
         else fitPlot[seedEtaIdx][logEIdx] = false;
 
         if(tokens.at(2) == "UP"){
-            new_upperParams_local[seedEtaIdx][logEIdx][0] = std::stof(tokens.at(4))
-            new_upperParams_local[seedEtaIdx][logEIdx][1] = std::stof(tokens.at(5))
-            new_upperParams_local[seedEtaIdx][logEIdx][2] = std::stof(tokens.at(6))
-            new_upperParams_local[seedEtaIdx][logEIdx][3] = std::stof(tokens.at(7))
+            new_upperParams_local[seedEtaIdx][logEIdx][0] = std::stof(tokens.at(4));
+            new_upperParams_local[seedEtaIdx][logEIdx][1] = std::stof(tokens.at(5));
+            new_upperParams_local[seedEtaIdx][logEIdx][2] = std::stof(tokens.at(6));
+            new_upperParams_local[seedEtaIdx][logEIdx][3] = std::stof(tokens.at(7));
         }
         if(tokens.at(2) == "LOW"){
-            new_lowerParams_local[seedEtaIdx][logEIdx][0] = std::stof(tokens.at(4))
-            new_lowerParams_local[seedEtaIdx][logEIdx][1] = std::stof(tokens.at(5))
-            new_lowerParams_local[seedEtaIdx][logEIdx][2] = std::stof(tokens.at(6))
-            new_lowerParams_local[seedEtaIdx][logEIdx][3] = std::stof(tokens.at(7))
+            new_lowerParams_local[seedEtaIdx][logEIdx][0] = std::stof(tokens.at(4));
+            new_lowerParams_local[seedEtaIdx][logEIdx][1] = std::stof(tokens.at(5));
+            new_lowerParams_local[seedEtaIdx][logEIdx][2] = std::stof(tokens.at(6));
+            new_lowerParams_local[seedEtaIdx][logEIdx][3] = std::stof(tokens.at(7));
         }
     }
 

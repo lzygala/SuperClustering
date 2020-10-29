@@ -498,7 +498,7 @@ void EventLoop(){
 void InitHistograms(){
 
     fit_outfile.open("envelope/fit_status.txt", std::ofstream::out | std::ofstream::trunc);
-    score_infile = TFile::Open("./simScore_Minima_withHitFraction.root");
+    score_infile = TFile::Open("Data/simScore_Minima_withHitFraction.root");
     score_infile->GetObject("h2_Minimum_simScore", h2_Minimum_simScore);
 
     double min_dEta = -0.15,
