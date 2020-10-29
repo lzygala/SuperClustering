@@ -542,7 +542,7 @@ void InitHistograms(){
 
 void SaveHistograms(string outputFile){
     cout<<cur_time()<<"\tCreating Output File"<<endl;
-    TFile *plotFile = new TFile(outputFile, "RECREATE");
+    TFile *plotFile = new TFile(outputFile.c_str(), "RECREATE");
     plotFile->cd();
     TCanvas *c1 = new TCanvas("c1","c1",3600,2400);
 

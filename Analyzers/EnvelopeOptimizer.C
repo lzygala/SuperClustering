@@ -248,66 +248,6 @@ Double_t fitFunc_dPhi(Double_t *x, Double_t *par){
     return maxdphi;
 }
 
-float upper_parabola_dEtaValue(float w00, float w01, float w10, float w11, float loget, float seedeta, float dPhi){
-    /*float w00     = par[0],
-          w01     = par[1],
-          w10     = par[2],
-          w11     = par[3],
-          loget   = curr_logET,//par[4],
-          seedeta = curr_seedEta;//par[5];
-    */
-    float p00 = -0.107537;
-	float p01 = 0.590969;
-	float p02 = -0.076494;
-	float p10 = -0.0268843;
-	float p11 = 0.147742;
-	float p12 = -0.0191235;
-
-    float c_upper = (p00 * pow(seedeta*sin(seedeta), 2)) + (p01 * seedeta*sin(seedeta)) + p02;
-
-    float d_upper =( w10*seedeta*sin(seedeta) ) + (w11 / sqrt(1.1 + loget));
-    float d_lower =( w00*seedeta*sin(seedeta) ) + (w01 / sqrt(1.1 + loget));
-    float b_upper = d_upper - 0.5*(d_lower + d_upper);
-
-    float a_upper = ((1 / (4 * c_upper))) - fabs(b_upper);
-
-    float upper_curve = (std::max((1 / (4 * a_upper)),0.0f))*(dPhi*dPhi) + std::max(b_upper, 0.0087f) + 0.0087;
-    //float upper_curve = (std::max((1 / (4 * a_upper)),0.0f))*(dPhi*dPhi) + b_upper + 0.0087;
-    //cout<<"\tup"<<upper_curve<<endl;
-    return upper_curve;
-}
-
-float lower_parabola_dEtaValue(float w00, float w01, float w10, float w11, float loget, float seedeta, float dPhi){
-    /*float w00     = par[0],
-          w01     = par[1],
-          w10     = par[2],
-          w11     = par[3],
-          loget   = curr_logET,//par[4],
-          seedeta = curr_seedEta;//par[5];
-    */
-
-    float p00 = -0.107537;
-	float p01 = 0.590969;
-	float p02 = -0.076494;
-	float p10 = -0.0268843;
-	float p11 = 0.147742;
-	float p12 = -0.0191235;
-
-    float c_lower = (p10 * pow(seedeta*sin(seedeta), 2)) + (p11 * seedeta*sin(seedeta)) + p12;
-
-    float d_upper =( w10*seedeta*sin(seedeta) ) + (w11 / sqrt(1.1 + loget));
-    float d_lower =( w00*seedeta*sin(seedeta) ) + (w01 / sqrt(1.1 + loget));
-    float b_lower = d_lower - 0.5*(d_lower + d_upper);
-
-    float a_lower = ((1 / (4 * c_lower))) - fabs(b_lower);
-
-    float lower_curve = (std::max((1 / (4 * a_lower)),0.0f))*(dPhi*dPhi) + std::min(b_lower, -0.0087f);
-    //Double_t lower_curve = (std::max((1 / (4 * a_lower)),0.0f))*(x[0]*x[0]) + b_lower;
-    //cout<<"\tlow"<<lower_curve<<endl;
-
-    return lower_curve;
-}
-
 vector<float> XErrors(int xBin, int yBin, int etaBin, int logetBin){
     vector<float> errors;
     errors.push_back(0.0);  //no errors

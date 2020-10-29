@@ -158,6 +158,66 @@ Double_t lower_parabola(Double_t *x, Double_t *par){
     return lower_curve;
 }
 
+float upper_parabola_dEtaValue(float w00, float w01, float w10, float w11, float loget, float seedeta, float dPhi){
+    /*float w00     = par[0],
+          w01     = par[1],
+          w10     = par[2],
+          w11     = par[3],
+          loget   = curr_logET,//par[4],
+          seedeta = curr_seedEta;//par[5];
+    */
+    float p00 = -0.107537;
+	float p01 = 0.590969;
+	float p02 = -0.076494;
+	float p10 = -0.0268843;
+	float p11 = 0.147742;
+	float p12 = -0.0191235;
+
+    float c_upper = (p00 * pow(seedeta*sin(seedeta), 2)) + (p01 * seedeta*sin(seedeta)) + p02;
+
+    float d_upper =( w10*seedeta*sin(seedeta) ) + (w11 / sqrt(1.1 + loget));
+    float d_lower =( w00*seedeta*sin(seedeta) ) + (w01 / sqrt(1.1 + loget));
+    float b_upper = d_upper - 0.5*(d_lower + d_upper);
+
+    float a_upper = ((1 / (4 * c_upper))) - fabs(b_upper);
+
+    float upper_curve = (std::max((1 / (4 * a_upper)),0.0f))*(dPhi*dPhi) + std::max(b_upper, 0.0087f) + 0.0087;
+    //float upper_curve = (std::max((1 / (4 * a_upper)),0.0f))*(dPhi*dPhi) + b_upper + 0.0087;
+    //cout<<"\tup"<<upper_curve<<endl;
+    return upper_curve;
+}
+
+float lower_parabola_dEtaValue(float w00, float w01, float w10, float w11, float loget, float seedeta, float dPhi){
+    /*float w00     = par[0],
+          w01     = par[1],
+          w10     = par[2],
+          w11     = par[3],
+          loget   = curr_logET,//par[4],
+          seedeta = curr_seedEta;//par[5];
+    */
+
+    float p00 = -0.107537;
+	float p01 = 0.590969;
+	float p02 = -0.076494;
+	float p10 = -0.0268843;
+	float p11 = 0.147742;
+	float p12 = -0.0191235;
+
+    float c_lower = (p10 * pow(seedeta*sin(seedeta), 2)) + (p11 * seedeta*sin(seedeta)) + p12;
+
+    float d_upper =( w10*seedeta*sin(seedeta) ) + (w11 / sqrt(1.1 + loget));
+    float d_lower =( w00*seedeta*sin(seedeta) ) + (w01 / sqrt(1.1 + loget));
+    float b_lower = d_lower - 0.5*(d_lower + d_upper);
+
+    float a_lower = ((1 / (4 * c_lower))) - fabs(b_lower);
+
+    float lower_curve = (std::max((1 / (4 * a_lower)),0.0f))*(dPhi*dPhi) + std::min(b_lower, -0.0087f);
+    //Double_t lower_curve = (std::max((1 / (4 * a_lower)),0.0f))*(x[0]*x[0]) + b_lower;
+    //cout<<"\tlow"<<lower_curve<<endl;
+
+    return lower_curve;
+}
+
 float dPhi_window(float yoffset, float scale, float xoffset, float width, float cutoff, float saturation, float logET){
 
     width = 1.0 / width;
@@ -393,20 +453,20 @@ void parabolaCompareHeatMap(){
         c1->SetGrid();
         parCom_LocalVFinal_Up[aveIdx] -> Draw("COLZ");
         g_minPoints_Up[aveIdx] -> Draw("P, sames");
-        c1 -> SaveAs((outdir+"parCom_LocalVFinal_Up_"+weightTitles[aveIdx]+".png").c_str());
-        c1 -> SaveAs((outdir+"parCom_LocalVFinal_Up_"+weightTitles[aveIdx]+".pdf").c_str());
+        c1 -> SaveAs((outdir+"parCom_LocalVFinal_Up_"+averageTitles[aveIdx]+".png").c_str());
+        c1 -> SaveAs((outdir+"parCom_LocalVFinal_Up_"+averageTitles[aveIdx]+".pdf").c_str());
 
 
         c1->SetGrid();
         parCom_LocalVFinal_Low[aveIdx] -> Draw("COLZ");
         g_minPoints_Low[aveIdx] -> Draw("P, sames");
-        c1 -> SaveAs((outdir+"parCom_LocalVFinal_Low_"+weightTitles[aveIdx]+".png").c_str());
-        c1 -> SaveAs((outdir+"parCom_LocalVFinal_Low_"+weightTitles[aveIdx]+".pdf").c_str());
+        c1 -> SaveAs((outdir+"parCom_LocalVFinal_Low_"+averageTitles[aveIdx]+".png").c_str());
+        c1 -> SaveAs((outdir+"parCom_LocalVFinal_Low_"+averageTitles[aveIdx]+".pdf").c_str());
     }
 
 }
 
-void Plot(){
+void Plot(int aveIdx = 0){
 
     TF1 *fit_curves_upper[seedEtaBins][logEBins],
         *fit_curves_lower[seedEtaBins][logEBins],
@@ -449,7 +509,7 @@ void Plot(){
             float curr_logE = midLogEs.at(loge_idx);
             float curr_seedEta = midEtas.at(seed_eta_idx);
 
-            float fit_maxdPhi = dPhi_window(yoffset_run2pfrht_opt[etaBin], scale_run2pfrht_opt[etaBin], xoffset_run2pfrht_opt[etaBin], width_run2pfrht_opt[etaBin], cutoff, saturation, curr_logE);
+            float fit_maxdPhi = dPhi_window(new_yoffset[etaBin], new_scale[etaBin], new_xoffset[etaBin], new_width[etaBin], cutoff, saturation, curr_logE);
             float phase1_maxdPhi = dPhi_window(phase1_yoffset[etaBin], phase1_scale[etaBin], phase1_xoffset[etaBin], phase1_width[etaBin], cutoff, saturation, curr_logE);
 
 
@@ -459,9 +519,9 @@ void Plot(){
             phase1_dPhi_right[seed_eta_idx][loge_idx] = new TLine((phase1_maxdPhi), -0.15, (phase1_maxdPhi), 0.2);
 
             fit_curves_upper[seed_eta_idx][loge_idx] = new TF1(("parabolaFit_upper_"+to_string(seed_eta_idx)+"_"+to_string(loge_idx)).c_str(),upper_parabola,-0.6,0.6,6);
-            fit_curves_upper[seed_eta_idx][loge_idx] -> SetParameters(curr_seedEta, curr_logE, new_w00_averaged, new_w01_averaged, new_w10_averaged, new_w11_averaged);
+            fit_curves_upper[seed_eta_idx][loge_idx] -> SetParameters(curr_seedEta, curr_logE, new_w00_averaged[aveIdx], new_w01_averaged[aveIdx], new_w10_averaged[aveIdx], new_w11_averaged[aveIdx]);
             fit_curves_lower[seed_eta_idx][loge_idx] = new TF1(("parabolaFit_lower_"+to_string(seed_eta_idx)+"_"+to_string(loge_idx)).c_str(),lower_parabola,-0.6,0.6,6);
-            fit_curves_lower[seed_eta_idx][loge_idx] -> SetParameters(curr_seedEta, curr_logE, new_w00_averaged, new_w01_averaged, new_w10_averaged, new_w11_averaged);
+            fit_curves_lower[seed_eta_idx][loge_idx] -> SetParameters(curr_seedEta, curr_logE, new_w00_averaged[aveIdx], new_w01_averaged[aveIdx], new_w10_averaged[aveIdx], new_w11_averaged[aveIdx]);
 
             phase1_curves_upper[seed_eta_idx][loge_idx] = new TF1(("parabolaphase1_upper_"+to_string(seed_eta_idx)+"_"+to_string(loge_idx)).c_str(),upper_parabola,-0.6,0.6,6);
             phase1_curves_upper[seed_eta_idx][loge_idx] -> SetParameters(curr_seedEta, curr_logE, phase1_w00, phase1_w01, phase1_w10, phase1_w11);
@@ -534,7 +594,7 @@ void Plot(){
 
 void ReadInfile(string inputFile){
     cout<<"Reading input file"<<endl;
-    TFile *hist_infile = TFile::Open(inputFile);
+    TFile *hist_infile = TFile::Open(inputFile.c_str());
 
     double seedEtaStep = (maxSeedEta - minSeedEta) / seedEtaBins;
     double logEStep = (maxLogE - minLogE) / logEBins;
@@ -556,12 +616,12 @@ void ReadInfile(string inputFile){
     double logEVal = minLogE;
     for(int logEIdx = 0; logEIdx < logEBins; logEIdx++){
         titles_loge.push_back((to_string(logEVal) + " #leq log_{10}(E) < " + to_string(logEVal + logEStep)).c_str());
-        mid_loges.push_back((2*logEVal) / 2.0);
+        midLogEs.push_back((2*logEVal) / 2.0);
         logEVal+=logEStep;
 
         std::ostringstream ss;
         ss << std::setw(3) << std::setfill('0') << to_string(logEIdx);
-        filename_loges[seedEtaIdx] = ss.str();
+        filename_loges[logEIdx] = ss.str();
     }
 
     fitPlot.resize(seedEtaBins, vector<bool>(logEBins, false));
@@ -612,7 +672,7 @@ void ReadInParameters(std::string localParamFileName, std::string aveParamFileNa
     dPhiParam_infile.open(dPhiParamFileName, std::ofstream::in | std::ofstream::trunc);
     
 
-    std::string curLine = '';
+    std::string curLine;
 
     //Averaged Parameter File Format:
     //AVE_WEIGHT\tW00\tW01\tW10\tW11
