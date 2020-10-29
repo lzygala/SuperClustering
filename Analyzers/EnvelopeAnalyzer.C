@@ -424,7 +424,7 @@ void EventLoop(){
 
             for(unsigned int iPF=0; iPF<pfCluster_energy->size(); iPF++){
                 int caloMatch = std::max_element(pfCluster_sim_fraction->at(iPF).begin(), pfCluster_sim_fraction->at(iPF).end()) - pfCluster_sim_fraction->at(iPF).begin();
-                if(caloMatch == idxCalo && pfCluster_sim_fraction->at(iPF).at(caloMatch) >= simScoreThresh)
+                if(caloMatch == (int)idxCalo && pfCluster_sim_fraction->at(iPF).at(caloMatch) >= simScoreThresh)
                     pfMatched_idx_pt.at(caloMatch).push_back(std::make_pair(iPF, pfCluster_energy->at(iPF)/TMath::CosH(pfCluster_eta->at(iPF))));  
             }
 

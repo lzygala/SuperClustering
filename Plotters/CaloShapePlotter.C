@@ -736,6 +736,7 @@ void ReadInParameters(std::string localParamFileName, std::string aveParamFileNa
         getline(dPhiParam_infile, curLine);
         istringstream iss(curLine);
         vector<string> tokens;
+        string token;
         while(std::getline(iss, token, '\t'))
             tokens.push_back(token);
         dPhiSections.push_back(tokens.at(0));

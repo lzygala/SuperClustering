@@ -4,7 +4,7 @@ runAnalyzer = True
 runOptimization = True
 runCaloShapePlotter = True
 
-dataFile = 'root://eoscms.cern.ch///eos/cms/store/user/lzygala/ReReco_OptPFRecHitThresholds/4Gamma_sample_OptPFRHT.root'       #input for EnvelopeAnalyzer
+dataFile = 'root://eoscms.cern.ch///eos/cms/store/user/lzygala/ClusteringSamples/4Gamma_sample_OptPFRHT.root'       #input for EnvelopeAnalyzer
 analyzerFile = 'Output/PlotFiles/EnvelopeAnalyzer_Output.root'   #output from EnvelopeAnalyzer & input for EnvelopeOptimizer
 optimizerFile = 'Output/PlotFiles/EnvelopeOptimizer_Output.root'  #output from EnvelopeOptimizer & input for CaloShapePlotter
 
