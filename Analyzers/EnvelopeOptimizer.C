@@ -1075,13 +1075,16 @@ void EnvelopeOptimizer(string inputFile, string outputFile, string localParamOut
 //main program
 
     fit_outfile.open("Output/fit_status.txt", std::ofstream::out | std::ofstream::trunc);
-    aveParam_outfile.open("Output/ParameterLists/averagedParameters.txt", std::ofstream::out | std::ofstream::trunc);
-    localParam_outfile.open("Output/ParameterLists/localParameters.txt", std::ofstream::out | std::ofstream::trunc);
-    dPhiParam_outfile.open("Output/ParameterLists/dPhiParameters.txt", std::ofstream::out | std::ofstream::trunc);
+    aveParam_outfile.open(aveParamOutFile, std::ofstream::out | std::ofstream::trunc);
+    localParam_outfile.open(localParamOutFile, std::ofstream::out | std::ofstream::trunc);
+    dPhiParam_outfile.open(dPhiParamOutFile, std::ofstream::out | std::ofstream::trunc);
     
     ReadInfile(inputFile);
     separation_opt_eBins(1,errorType,ringRejection,binRejection);
                   //(bool fit, int error=0, bool ringRejection=0, bool binRejection=0)
+    dPhiOptimization();
+    averageSeparationParams();
+    final_params_dPhi();
     //fullParabola_opt(1,2,1,1,1);
     //dPhi_opt();
     //final_params_dPhi();

@@ -8,9 +8,9 @@ dataFile = 'root://eoscms.cern.ch///eos/cms/store/user/lzygala/ReReco_OptPFRecHi
 analyzerFile = 'Output/PlotFiles/EnvelopeAnalyzer_Output.root'   #output from EnvelopeAnalyzer & input for EnvelopeOptimizer
 optimizerFile = 'Output/PlotFiles/EnvelopeOptimizer_Output.root'  #output from EnvelopeOptimizer & input for CaloShapePlotter
 
-localRegionParameterFile = ''
-averagedParameterFile = ''
-dPhiParameterFile = ''
+localRegionParameterFile = 'Output/ParameterLists/localParameters.txt'
+averagedParameterFile = 'Output/ParameterLists/averagedParameters.txt'
+dPhiParameterFile = 'Output/ParameterLists/dPhiParameters.txt'
 
 logEBins = 15
 minLogE = -2
@@ -76,7 +76,8 @@ def main():
 
     plotterArgList = [optimizerFile, #input file
                       localRegionParameterFile,
-                      averagedParameterFile] 
+                      averagedParameterFile,
+                      dPhiParameterFile] 
 
     if runAnalyzer:
         analyzer = runMacro('Analyzers/EnvelopeAnalyzer.C++', analyzerArgList)

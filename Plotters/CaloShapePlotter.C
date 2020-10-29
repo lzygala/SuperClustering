@@ -683,9 +683,13 @@ void ReadInParameters(std::string localParamFileName, std::string aveParamFileNa
     dPhiParam_infile.close();
 }
 
-void CaloShapePlotter(std::string inputFile, std::string localParamFileName, std::string aveParamFileName){
+void CaloShapePlotter(std::string inputFile, std::string localParamFileName, std::string aveParamFileName, std::string dPhiParamFileName){
 
     ReadInfile(inputFile);
-    Plot_AllCurves();
+    ReadInParameters(localParamFileName, aveParamFileName, dPhiParamFileName);
+
+    parabolaCompareHeatMap();
+    Plot();
+    plotRegionalCurves();
 
 }
