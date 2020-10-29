@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "envelope_optimization.C": "cpp",
+        "EnvelopeOptimizer.C": "cpp",
+        "CaloShapePlotter.C": "cpp",
+        "vector": "cpp",
+        "string": "cpp",
+        "string_view": "cpp",
+        "EnvelopeAnalyzer.C": "cpp",
+        "deque": "cpp"
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
+}
