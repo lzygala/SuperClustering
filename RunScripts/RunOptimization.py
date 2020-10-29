@@ -93,3 +93,6 @@ def main():
         print("Running Plotter")
         plotter = runMacro('Plotters/CaloShapePlotter.C++', plotterArgList)
         plotter.wait()
+
+if __name__ == "__main__":
+    main()
