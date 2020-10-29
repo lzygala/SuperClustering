@@ -80,13 +80,16 @@ def main():
                       dPhiParameterFile] 
 
     if runAnalyzer:
+        print("Running Analyzer")
         analyzer = runMacro('Analyzers/EnvelopeAnalyzer.C++', analyzerArgList)
         analyzer.wait()
 
     if runOptimization:
+        print("Running Optimizer")
         optimization = runMacro('Analyzers/EnvelopeOptimizer.C++', optimizerArgList)
         optimization.wait()
 
     if runCaloShapePlotter:
+        print("Running Plotter")
         plotter = runMacro('Plotters/CaloShapePlotter.C++', plotterArgList)
         plotter.wait()
