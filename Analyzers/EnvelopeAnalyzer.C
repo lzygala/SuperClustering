@@ -485,10 +485,12 @@ void EventLoop(){
                 caloClusters_shape_eBins[seedEta_bin][logE_bin] -> Fill(dPhi, dEta);
 
                 int dPhiBin = caloClusters_shape_eBins_etWeight[seedEta_bin][logE_bin] -> GetXaxis() -> FindBin(dPhi);
-                caloClusters_eBins_dEtaDist[seedEta_bin][logE_bin][dPhiBin] -> Fill(dEta, etPF);
+                if(dPhiBin < caloClusterShapeDEtaDistBins)
+                    caloClusters_eBins_dEtaDist[seedEta_bin][logE_bin][dPhiBin] -> Fill(dEta, etPF);
 
                 int logETBin = cluster_dPhi_vs_loget[dPhi_bin] -> GetXaxis() -> FindBin(logET);
-                caloClusters_dPhiDist[dPhi_bin][logETBin] -> Fill(fabs(dPhi), etPF);
+                if(logETBin < dPhiWindowETDistBins)
+                    caloClusters_dPhiDist[dPhi_bin][logETBin] -> Fill(fabs(dPhi), etPF);
             }
         }// loop over calo particels
     }//event loop
