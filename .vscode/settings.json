@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "EnvelopeAnalyzer.C": "cpp"
+        "EnvelopeAnalyzer.C": "cpp",
+        "CaloShapePlotter.C": "cpp"
     }
 }
