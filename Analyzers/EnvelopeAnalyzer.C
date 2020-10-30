@@ -1,4 +1,3 @@
-
 #include<TApplication.h>
 #include<TFile.h>
 #include<TMath.h>
@@ -366,6 +365,19 @@ string trimString(string str){
     return str.substr(first, (last - first + 1));
 }
 
+void setOutput(string path){
+    if (mkdir(path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1){
+        if( errno == EEXIST ) {
+        // alredy exists
+            return;
+        } else {
+        // something else
+            std::cout << "cannot create folder error:" << strerror(errno) << std::endl;
+        }
+    }
+    return;
+}
+
 bool comparePFpt(const std::pair<int, double>&i, const std::pair<int, double>&j)
 {
    return i.second > j.second;
@@ -484,8 +496,11 @@ void EventLoop(){
                 caloClusters_shape_eBins_eWeight[seedEta_bin][logE_bin] -> Fill(dPhi, dEta, ePF);
                 caloClusters_shape_eBins[seedEta_bin][logE_bin] -> Fill(dPhi, dEta);
 
+                //index 0 : underflow bin
+                //index 1->caloClusterShapeDEtaDistBins : valid bins
+                //index caloClusterShapeDEtaDistBins + 1 : overflow bin
                 int dPhiBin = caloClusters_shape_eBins_etWeight[seedEta_bin][logE_bin] -> GetXaxis() -> FindBin(dPhi);
-                if(dPhiBin < caloClusterShapeDEtaDistBins)
+                if(dPhiBin < caloClusterShapeDEtaDistBins) 
                     caloClusters_eBins_dEtaDist[seedEta_bin][logE_bin][dPhiBin] -> Fill(dEta, etPF);
 
                 int logETBin = cluster_dPhi_vs_loget[dPhi_bin] -> GetXaxis() -> FindBin(logET);
@@ -517,10 +532,10 @@ void InitHistograms(){
     caloClusters_shape_eBins.resize(seedEtaBins, vector<TH2F*>(logEBins));
     caloClusters_shape_eBins_etWeight.resize(seedEtaBins, vector<TH2F*>(logEBins));
     caloClusters_shape_eBins_eWeight.resize(seedEtaBins, vector<TH2F*>(logEBins));
-    caloClusters_eBins_dEtaDist.resize(seedEtaBins, vector<vector<TH1F*>>(logEBins, vector<TH1F*>(caloClusterShapeDEtaDistBins)));
+    caloClusters_eBins_dEtaDist.resize(seedEtaBins, vector<vector<TH1F*>>(logEBins, vector<TH1F*>(caloClusterShapeDEtaDistBins + 2)));
 
     cluster_dPhi_vs_loget.resize(dPhiWindowEtaBins);
-    caloClusters_dPhiDist.resize(dPhiWindowEtaBins, vector<TH1F*>(dPhiWindowETDistBins));
+    caloClusters_dPhiDist.resize(dPhiWindowEtaBins, vector<TH1F*>(dPhiWindowETDistBins + 2));
 
     for(int seedEtaIdx = 0; seedEtaIdx < seedEtaBins; seedEtaIdx++){
         for(int logEIdx = 0; logEIdx < logEBins; logEIdx++){    
@@ -528,7 +543,7 @@ void InitHistograms(){
             caloClusters_shape_eBins_etWeight[seedEtaIdx][logEIdx] = new TH2F(("caloClusters_shape_eBins_etWeight_"+to_string(seedEtaIdx)+"_"+to_string(logEIdx)).c_str(),("caloClusters_shape_eBins_etWeight_"+to_string(seedEtaIdx)+"_"+to_string(logEIdx)).c_str(),bins_dPhi,min_dPhi,max_dPhi,bins_dEta,min_dEta,max_dEta);
             caloClusters_shape_eBins_eWeight[seedEtaIdx][logEIdx] = new TH2F(("caloClusters_shape_eBins_eWeight_"+to_string(seedEtaIdx)+"_"+to_string(logEIdx)).c_str(),("caloClusters_shape_eBins_eWeight_"+to_string(seedEtaIdx)+"_"+to_string(logEIdx)).c_str(),bins_dPhi,min_dPhi,max_dPhi,bins_dEta,min_dEta,max_dEta);
             
-            for(int k = 0; k < caloClusterShapeDEtaDistBins; k++){
+            for(int k = 0; k < caloClusterShapeDEtaDistBins + 2; k++){
                 caloClusters_eBins_dEtaDist[seedEtaIdx][logEIdx][k] = new TH1F(("ET_vs_dEta_eBins_"+to_string(seedEtaIdx)+"_"+to_string(logEIdx)+"_"+to_string(k)).c_str(),("ET_vs_dEta_eBins_"+to_string(seedEtaIdx)+"_"+to_string(logEIdx)+"_"+to_string(k)).c_str(), 105, -0.15, 0.2);
             }
         }
@@ -536,7 +551,7 @@ void InitHistograms(){
     for(int ii = 0; ii < dPhiWindowEtaBins; ii++){
         cluster_dPhi_vs_loget[ii] = new TH2F(("caloClusters_dPhi_vs_logET_etaBin_"+to_string(ii)).c_str(),("caloClusters_dPhi_vs_logET_etaBin_"+to_string(ii)).c_str(),200, -1.0, 3.0, 200, 0.0, 1.0);
         
-        for(int jj = 0; jj < dPhiWindowETDistBins; jj++){
+        for(int jj = 0; jj < dPhiWindowETDistBins + 2; jj++){
             caloClusters_dPhiDist[ii][jj] = new TH1F(("ET_vs_dPhi_"+to_string(ii)+"_"+to_string(jj)).c_str(),("ET_vs_dPhi_"+to_string(ii)+"_"+to_string(jj)).c_str(), 200, 0.0, 1.0);
         }
     }
@@ -560,7 +575,7 @@ void SaveHistograms(string outputFile){
             caloClusters_shape_eBins_etWeight[seedEta_bin][logET_bin]->Draw();
             caloClusters_shape_eBins_etWeight[seedEta_bin][logET_bin]->Write();
 
-            for(int dPhi=0; dPhi<caloClusterShapeDEtaDistBins; dPhi++){
+            for(int dPhi = 0; dPhi < caloClusterShapeDEtaDistBins + 2; dPhi++){
                 caloClusters_eBins_dEtaDist[seedEta_bin][logET_bin][dPhi]->Draw();
                 caloClusters_eBins_dEtaDist[seedEta_bin][logET_bin][dPhi]->Write();
             }
@@ -570,7 +585,7 @@ void SaveHistograms(string outputFile){
     for(int dPhi = 0; dPhi < dPhiWindowEtaBins; dPhi++){
         cluster_dPhi_vs_loget[dPhi] -> Draw();
         cluster_dPhi_vs_loget[dPhi] -> Write();
-        for(int x = 0; x < dPhiWindowETDistBins; x++){
+        for(int x = 0; x < dPhiWindowETDistBins + 2; x++){
             caloClusters_dPhiDist[dPhi][x] ->Draw();
             caloClusters_dPhiDist[dPhi][x] ->Write();
         }

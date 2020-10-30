@@ -974,10 +974,10 @@ void ReadInfile(string inputFile){
     caloClusters_shape_eBins.resize(seedEtaBins, vector<TH2F*>(logEBins));
     caloClusters_shape_eBins_etWeight.resize(seedEtaBins, vector<TH2F*>(logEBins));
     caloClusters_shape_eBins_eWeight.resize(seedEtaBins, vector<TH2F*>(logEBins));
-    caloClusters_eBins_dEtaDist.resize(seedEtaBins, vector<vector<TH1F*>>(logEBins, vector<TH1F*>(caloClusterShapeDEtaDistBins)));
+    caloClusters_eBins_dEtaDist.resize(seedEtaBins, vector<vector<TH1F*>>(logEBins, vector<TH1F*>(caloClusterShapeDEtaDistBins + 2)));
 
     cluster_dPhi_vs_loget.resize(dPhiWindowEtaBins);
-    caloClusters_dPhiDist.resize(dPhiWindowEtaBins, vector<TH1F*>(dPhiWindowETDistBins));
+    caloClusters_dPhiDist.resize(dPhiWindowEtaBins, vector<TH1F*>(dPhiWindowETDistBins + 2));
 
     fit_w00_up.resize(seedEtaBins, vector<float>(logEBins));
     fit_w01_up.resize(seedEtaBins, vector<float>(logEBins));
@@ -994,7 +994,7 @@ void ReadInfile(string inputFile){
             hist_infile->GetObject(("caloClusters_shape_eBins_etWeight_"+to_string(seedEtaIdx)+"_"+to_string(logEIdx)).c_str(),caloClusters_shape_eBins_etWeight[seedEtaIdx][logEIdx]);
             hist_infile->GetObject(("caloClusters_shape_eBins_eWeight_"+to_string(seedEtaIdx)+"_"+to_string(logEIdx)).c_str(),caloClusters_shape_eBins_eWeight[seedEtaIdx][logEIdx]);
             
-            for(int dEtaDistBins = 0; dEtaDistBins < caloClusterShapeDEtaDistBins; dEtaDistBins++){
+            for(int dEtaDistBins = 0; dEtaDistBins < caloClusterShapeDEtaDistBins + 2; dEtaDistBins++){
                 hist_infile->GetObject(("ET_vs_dEta_eBins_"+to_string(seedEtaIdx)+"_"+to_string(logEIdx)+"_"+to_string(dEtaDistBins)).c_str(),caloClusters_eBins_dEtaDist[seedEtaIdx][logEIdx][dEtaDistBins]);
             }
         }
@@ -1002,7 +1002,7 @@ void ReadInfile(string inputFile){
     for(int ii = 0; ii < dPhiWindowEtaBins; ii++){
         hist_infile->GetObject(("caloClusters_dPhi_vs_logET_etaBin_"+to_string(ii)).c_str(),cluster_dPhi_vs_loget[ii]);
 
-        for(int x = 0; x < dPhiWindowETDistBins; x++){
+        for(int x = 0; x < dPhiWindowETDistBins + 2; x++){
             hist_infile->GetObject(("ET_vs_dPhi_"+to_string(ii)+"_"+to_string(x)).c_str(),caloClusters_dPhiDist[ii][x]);
         }
     }
