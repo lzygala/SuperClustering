@@ -510,8 +510,8 @@ void separationOptimization(bool fit, int error=0, bool ringRejection=0, bool bi
 
                 float xBin_val = caloClusters_shape_eBins_etWeight[seed_eta_idx][loge_idx] -> GetXaxis() -> GetBinCenter(xbin_idx);
 
-                if(ringRejection){
-                    if(xBin_val > -0.05 && xBin_val < 0.05 && loge_idx <8) continue; //skip the ring
+                if(ringRejection){ //skip the ring
+                    if(xBin_val > -0.05 && xBin_val < 0.05 && loge_idx <8) continue;
                     if(seed_eta_idx >= 6 && xBin_val > -0.065 && xBin_val < 0.065 && loge_idx <8) continue;
                     if(seed_eta_idx >= 8 && xBin_val > -0.1 && xBin_val < 0.1 && loge_idx <8) continue;
                     if(seed_eta_idx >= 11 && xBin_val > -0.15 && xBin_val < 0.15) continue;
@@ -1040,7 +1040,7 @@ void ReadInfile(string inputFile){
     cout << cur_time() << "\tFile read complete." << endl;
 }
 
-void EnvelopeOptimizer(string inputFile, string outputFile, string localParamOutFile, string aveParamOutFile, string dPhiParamOutFile, int errorType, bool ringRejection, bool binRejection){
+void EnvelopeOptimizer(string inputFile, string localParamOutFile, string aveParamOutFile, string dPhiParamOutFile, int errorType, bool ringRejection, bool binRejection){
 //main program
 
     fit_outfile.open("Output/fit_status.txt", std::ofstream::out | std::ofstream::trunc);

@@ -5,8 +5,7 @@ runOptimization = True
 runCaloShapePlotter = True
 
 dataFile = 'root://eoscms.cern.ch///eos/cms/store/user/lzygala/ClusteringSamples/4Gamma_sample_OptPFRHT.root'       #input for EnvelopeAnalyzer
-analyzerFile = 'Output/PlotFiles/EnvelopeAnalyzer_Output.root'   #output from EnvelopeAnalyzer & input for EnvelopeOptimizer
-optimizerFile = 'Output/PlotFiles/EnvelopeOptimizer_Output.root'  #output from EnvelopeOptimizer & input for CaloShapePlotter
+analyzerFile = 'Output/PlotFiles/EnvelopeAnalyzer_Output.root'   #output from EnvelopeAnalyzer & input for EnvelopeOptimizer & Plotter
 
 localRegionParameterFile = 'Output/ParameterLists/localParameters.txt'
 averagedParameterFile = 'Output/ParameterLists/averagedParameters.txt'
@@ -66,7 +65,6 @@ def main():
 
 
     optimizerArgList = [analyzerFile, #input file,
-                        optimizerFile, #output file
                         localRegionParameterFile,
                         averagedParameterFile,
                         dPhiParameterFile,
@@ -74,7 +72,7 @@ def main():
                         ringRejection,
                         binRejection]
 
-    plotterArgList = [optimizerFile, #input file
+    plotterArgList = [analyzerFile, #input file
                       localRegionParameterFile,
                       averagedParameterFile,
                       dPhiParameterFile] 
