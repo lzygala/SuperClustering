@@ -29,6 +29,9 @@
 #include<thread>
 #include<vector>
 
+#include<sys/stat.h>
+#include<errno.h>
+
 
 #ifdef __MAKECINT__ 
 #pragma link C++ class vector<vector<double> >+;  
