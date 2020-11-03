@@ -444,23 +444,24 @@ TF1* fitMinimization(TF1*& function, TGraphErrors*& points, string fit_name, int
 
 void separationOptimization(bool fit, int error=0, bool ringRejection=0, bool binRejection=0){
 //optimization of parabola separation parameters
+    cout << cur_time() << "\tBeginning Optimization of Separation Parameters." << endl;
 
-    TGraphErrors *envelope_plot_upper[15][15];
-    TF1 *curve_fits_upper[15][15];
+    TGraphErrors *envelope_plot_upper[seedEtaBins][logEBins];
+    TF1 *curve_fits_upper[seedEtaBins][logEBins];
 
-    TGraphErrors *envelope_plot_lower[15][15];
-    TF1 *curve_fits_lower[15][15];
+    TGraphErrors *envelope_plot_lower[seedEtaBins][logEBins];
+    TF1 *curve_fits_lower[seedEtaBins][logEBins];
 
-    TLegend* legends[15][15]; 
+    TLegend* legends[seedEtaBins][logEBins]; 
 
     TCanvas *c1 = new TCanvas("c1","c1",3600,2400);
 
     localParam_outfile << "SEED_ETA\tLOG(E)\tPARABOLA\tPARAMETER\tVALUE\tFROM_FIT"<<endl;
 
     //loop over seed eta bins - 15    
-    for(int seed_eta_idx = 0; seed_eta_idx < 15; seed_eta_idx++){ 
+    for(int seed_eta_idx = 0; seed_eta_idx < seedEtaBins; seed_eta_idx++){ 
         //loop over loget bins - 15
-        for(int loge_idx = 0; loge_idx < 15; loge_idx++){  
+        for(int loge_idx = 0; loge_idx < logEBins; loge_idx++){  
 
             int envelope_percent = 98,
                 x_bins_total = caloClusters_shape_eBins_etWeight[seed_eta_idx][loge_idx] -> GetNbinsX(),
@@ -760,10 +761,13 @@ void separationOptimization(bool fit, int error=0, bool ringRejection=0, bool bi
             }
         } //loget index
     } //seed eta index
+    cout << cur_time() << "\tOptimization complete." << endl;
 }
 
 void dPhiOptimization(){
 //optimization of dynamic dPhi window parameters
+    cout << cur_time() << "\tBeginning Optimization of DPhi Window." << endl;
+
     TGraphErrors *dphi_envelope_plot[4];
     TF1 *dphi_fits[4];
     TF1 *dphi_original[4];
@@ -892,6 +896,7 @@ void dPhiOptimization(){
         width_opt.push_back(dphi_fits[dphi_idx]->GetParameter(3));
 
     } //dphi index
+    cout << cur_time() << "\tOptimization complete." << endl;
 }
 
 void averageSeparationParams(){
@@ -936,10 +941,10 @@ void final_params_dPhi(){
                           << xoffset_opt[i] << "\t"
                           << width_opt[i] << endl;
     }
-
 }
 
 void ReadInfile(string inputFile){
+    cout << cur_time() << "\tReading in file: " << inputFile << endl;
     TFile *hist_infile = TFile::Open(inputFile.c_str());
 
     double seedEtaStep = (maxSeedEta - minSeedEta) / seedEtaBins;
@@ -1009,6 +1014,8 @@ void ReadInfile(string inputFile){
 
     curr_logET = 0.0;
     curr_seedEta = 0.0;
+
+    cout << cur_time() << "\tFile read complete." << endl;
 }
 
 void EnvelopeOptimizer(string inputFile, string outputFile, string localParamOutFile, string aveParamOutFile, string dPhiParamOutFile, int errorType, bool ringRejection, bool binRejection){
