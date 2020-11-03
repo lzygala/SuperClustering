@@ -169,6 +169,19 @@ string trimString(string str){
     return str.substr(first, (last - first + 1));
 }
 
+void setOutput(string path){
+    if (mkdir(path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1){
+        if( errno == EEXIST ) {
+        // alredy exists
+            return;
+        } else {
+        // something else
+            std::cout << "cannot create folder error:" << strerror(errno) << std::endl;
+        }
+    }
+    return;
+}
+
 Double_t fitFunc_upper(Double_t *x, Double_t *par){
 //upper parabola fit function definition
     float w00     = par[0],
@@ -708,8 +721,11 @@ void separationOptimization(bool fit, int error=0, bool ringRejection=0, bool bi
                 curve_fits_lower[seed_eta_idx][loge_idx] -> Draw("SAME");
             }
 
-            c1->SaveAs(("envelope/envelope_fit_Eta_"+filename_etas[seed_eta_idx]+"_"+filename_loges[loge_idx]+".png").c_str());
-            c1->SaveAs(("envelope/envelope_fit_Eta_"+filename_etas[seed_eta_idx]+"_"+filename_loges[loge_idx]+".pdf").c_str());
+            string outdir = "Output/Plots/EnvelopeFits_SepParams/";
+            setOutput(outdir);
+
+            c1->SaveAs((outdir+"envelope_fit_Eta_"+filename_etas[seed_eta_idx]+"_"+filename_loges[loge_idx]+".png").c_str());
+            c1->SaveAs((outdir+"envelope_fit_Eta_"+filename_etas[seed_eta_idx]+"_"+filename_loges[loge_idx]+".pdf").c_str());
 
             //aggregate parameter values
             if(fit){
@@ -888,7 +904,10 @@ void dPhiOptimization(){
         dphi_original[dphi_idx] -> Draw("SAME");
         dphi_legends[dphi_idx]->Draw("SAME");
 
-        c2 -> SaveAs(("envelope/dphi_fit_"+to_string(dphi_idx)+".png").c_str());
+        string outdir = "Output/Plots/EnvelopeFits_DPhiParams/";
+        setOutput(outdir);
+
+        c2 -> SaveAs((outdir+"dphi_fit_"+to_string(dphi_idx)+".png").c_str());
 
         yoffset_opt.push_back(dphi_fits[dphi_idx]->GetParameter(0));
         scale_opt.push_back(dphi_fits[dphi_idx]->GetParameter(1));
@@ -1032,16 +1051,6 @@ void EnvelopeOptimizer(string inputFile, string outputFile, string localParamOut
     dPhiOptimization();
     averageSeparationParams();
     final_params_dPhi();
-    //fullParabola_opt(1,2,1,1,1);
-    //dPhi_opt();
-    //final_params_dPhi();
-    //final_params();
-    //curveAverage();
-    //plotRegionalCurves();
-    //parabolaCompareHeatMap_Individual();
-    //printParams();
-
-    //savePlot();
  
     fit_outfile.close();
     aveParam_outfile.close();
