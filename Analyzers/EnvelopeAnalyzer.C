@@ -445,8 +445,8 @@ void EventLoop(){
             sort(pfMatched_idx_pt.at(idxCalo).begin(),pfMatched_idx_pt.at(idxCalo).end(),comparePFpt);
 
 
-            double seedEtaStep = (maxSeedEta - minSeedEta) / seedEtaBins;
-            double logEStep = (maxLogE - minLogE) / logEBins;
+            double seedEtaStep = (maxSeedEta - minSeedEta) / (double)seedEtaBins;
+            double logEStep = (maxLogE - minLogE) / (double)logEBins;
 
             double seedEtaVal = minSeedEta;
             for(int iSeedEta = 0; iSeedEta < seedEtaBins; iSeedEta++){
