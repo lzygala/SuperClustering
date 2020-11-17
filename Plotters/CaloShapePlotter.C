@@ -350,7 +350,7 @@ void parabolaCompareHeatMap(){
 //Compare local parabola values against various averaged parabola values
     int weightNum = new_w00_averaged.size();
 
-    TH2F *parCom_LocalVFinal_Up[weightNum], *parCom_LocalVFinal_Low[weightNum];
+    TH2F *parCom_LocalVFinal_Up[weightNum], *parCom_LocalVFinal_Low[weightNum], *parCom_LocalVFinal_Width[weightNum];
     TGraphErrors *g_minPoints_Up[weightNum], *g_minPoints_Low[weightNum];
 
     TCanvas *c1 = new TCanvas("c1","c1",3600,3600);

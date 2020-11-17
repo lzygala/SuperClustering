@@ -488,9 +488,10 @@ void EventLoop(){
                     } 
                     logEVal+=logEStep;
                 }
+                cout<<logE_bin<<"\t"<<seedEta_bin<<endl;
 
 
-                if(logE_bin < 0 || seedEta_bin < 0){cout<<logE_bin<<"\t"<<seedEta_bin<<endl; continue;}
+                if(logE_bin < 0 || seedEta_bin < 0){cout<<"fail\t"<<logE_bin<<"\t"<<seedEta_bin<<endl; continue;}
 
                 //fill histograms
                 caloClusters_shape_eBins_etWeight[seedEta_bin][logE_bin] -> Fill(dPhi, dEta, etPF);
