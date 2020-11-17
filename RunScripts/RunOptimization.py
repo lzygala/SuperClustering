@@ -12,8 +12,8 @@ averagedParameterFile = 'Output/ParameterLists/averagedParameters.txt'
 dPhiParameterFile = 'Output/ParameterLists/dPhiParameters.txt'
 
 logEBins = 15
-minLogE = -2
-maxLogE = 1
+minLogE = -1
+maxLogE = 2
 
 seedEtaBins = 15
 minSeedEta = 0      #abs

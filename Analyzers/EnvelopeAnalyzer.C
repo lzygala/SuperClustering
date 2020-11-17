@@ -493,7 +493,6 @@ void EventLoop(){
                 if(logE_bin < 0 || seedEta_bin < 0) continue;
 
                 //fill histograms
-
                 caloClusters_shape_eBins_etWeight[seedEta_bin][logE_bin] -> Fill(dPhi, dEta, etPF);
                 caloClusters_shape_eBins_eWeight[seedEta_bin][logE_bin] -> Fill(dPhi, dEta, ePF);
                 caloClusters_shape_eBins[seedEta_bin][logE_bin] -> Fill(dPhi, dEta);

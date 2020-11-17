@@ -151,7 +151,7 @@
     
     vector<string> titles_etas, titles_loge, filename_etas, filename_loges;
 
-    vector<float> mid_etas,
+    vector<double> mid_etas,
                   mid_loges;
 
 string cur_time(){
@@ -944,7 +944,7 @@ void averageSeparationParams(){
               final_w11_weighted =   ( (accumulate(fit_w11_upper_weighted.at(aveIdx).begin(),fit_w11_upper_weighted.at(aveIdx).end(),0.0)) + (accumulate(fit_w11_lower_weighted.at(aveIdx).begin(),fit_w11_lower_weighted.at(aveIdx).end(),0.0)) ) 
                                    / ( (accumulate(fit_w11_upper_weighted_denom.at(aveIdx).begin(),fit_w11_upper_weighted_denom.at(aveIdx).end(),0.0)) + (accumulate(fit_w11_lower_weighted_denom.at(aveIdx).begin(),fit_w11_lower_weighted_denom.at(aveIdx).end(),0.0)) );
 
-        aveParam_outfile << weightTitles[aveIdx] << final_w00_weighted << final_w01_weighted << final_w10_weighted << final_w11_weighted << endl;
+        aveParam_outfile << weightTitles[aveIdx] <<"\t"<< final_w00_weighted <<"\t"<< final_w01_weighted <<"\t"<< final_w10_weighted <<"\t"<< final_w11_weighted << endl;
 
     }
 }

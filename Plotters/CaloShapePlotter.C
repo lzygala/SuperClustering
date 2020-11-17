@@ -359,6 +359,7 @@ void parabolaCompareHeatMap(){
 
         parCom_LocalVFinal_Up[aveIdx] = new TH2F(("parCom_LocalVFinal_Up_"+to_string(aveIdx)).c_str(), ("parCom_LocalVFinal_Up_"+to_string(aveIdx)).c_str(),15,-1.0,2.0,15,0.0,3.0);
         parCom_LocalVFinal_Low[aveIdx] = new TH2F(("parCom_LocalVFinal_Low_"+to_string(aveIdx)).c_str(), ("parCom_LocalVFinal_Low_"+to_string(aveIdx)).c_str(),15,-1.0,2.0,15,0.0,3.0);
+        parCom_LocalVFinal_Width[aveIdx] = new TH2F(("parCom_LocalVFinal_Width_"+to_string(aveIdx)).c_str(), ("parCom_LocalVFinal_Width_"+to_string(aveIdx)).c_str(),15,-1.0,2.0,15,0.0,3.0);
         
         vector<float> minPoints_Up_x, minPoints_Up_y, minPoints_Low_x, minPoints_Low_y;
 
@@ -399,9 +400,11 @@ void parabolaCompareHeatMap(){
 
                 float plotVal_up = local_up_dEta / averaged_up_dEta;
                 float plotVal_low = local_low_dEta / averaged_low_dEta;
+                float plotVal_width = (local_up_dEta - local_low_dEta) / (averaged_up_dEta - averaged_low_dEta);
 
                 parCom_LocalVFinal_Up[aveIdx] -> Fill(midLogEs[loge_idx], midEtas[seed_eta_idx], plotVal_up);
                 parCom_LocalVFinal_Low[aveIdx] -> Fill(midLogEs[loge_idx], midEtas[seed_eta_idx], plotVal_low);
+                parCom_LocalVFinal_Width[aveIdx] -> Fill(midLogEs[loge_idx], midEtas[seed_eta_idx], plotVal_width);
 
                 float epsilon = 0.000000001;
                 if(fabs(local_up_dEta - 0.0174) < epsilon && fabs(averaged_up_dEta - 0.0174) < epsilon && fabs(local_up_dEta - averaged_up_dEta) < epsilon){
@@ -447,6 +450,18 @@ void parabolaCompareHeatMap(){
         parCom_LocalVFinal_Low[aveIdx] -> GetXaxis() -> SetLabelSize(0.02);
         parCom_LocalVFinal_Low[aveIdx] -> GetYaxis() -> SetLabelSize(0.02);
 
+
+        parCom_LocalVFinal_Width[aveIdx] -> SetTitle("Parabola Widths: Local Parameter Curve / Averaged Parameter Curve");
+        parCom_LocalVFinal_Width[aveIdx] -> GetXaxis() -> SetTitle("log(E)");
+        parCom_LocalVFinal_Width[aveIdx] -> GetYaxis() -> SetTitle("Seed Eta");
+        parCom_LocalVFinal_Width[aveIdx] -> GetZaxis() -> SetTitle("Local Parameters Width / Averaged Parameters Width");
+        parCom_LocalVFinal_Width[aveIdx] -> GetZaxis() -> SetRangeUser(0.0,5.0);
+        
+        parCom_LocalVFinal_Width[aveIdx] -> GetXaxis() -> SetNdivisions(15,0,0);
+        parCom_LocalVFinal_Width[aveIdx] -> GetYaxis() -> SetNdivisions(15,0,0);
+        parCom_LocalVFinal_Width[aveIdx] -> GetXaxis() -> SetLabelSize(0.02);
+        parCom_LocalVFinal_Width[aveIdx] -> GetYaxis() -> SetLabelSize(0.02);
+
         string outdir = "Output/Plots/";
         setOutput(outdir);
 
@@ -462,6 +477,11 @@ void parabolaCompareHeatMap(){
         g_minPoints_Low[aveIdx] -> Draw("P, sames");
         c1 -> SaveAs((outdir+"parCom_LocalVFinal_Low_"+averageTitles[aveIdx]+".png").c_str());
         c1 -> SaveAs((outdir+"parCom_LocalVFinal_Low_"+averageTitles[aveIdx]+".pdf").c_str());
+
+        c1->SetGrid();
+        parCom_LocalVFinal_Width[aveIdx] -> Draw("COLZ");
+        c1 -> SaveAs((outdir+"parCom_LocalVFinal_Width_"+averageTitles[aveIdx]+".png").c_str());
+        c1 -> SaveAs((outdir+"parCom_LocalVFinal_Width_"+averageTitles[aveIdx]+".pdf").c_str());
     }
 
 }
