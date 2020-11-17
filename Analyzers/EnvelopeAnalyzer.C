@@ -396,7 +396,7 @@ float getThreshold(float seedEta, float seedET){
 
 void EventLoop(){
 //Loops over all events and fills histograms
-    int eventLoopMax = 1000;//EvMax;
+    int eventLoopMax = 25000;//EvMax;
 
     for(int iev=0; iev<eventLoopMax;++iev){
         EventTree->GetEvent(iev);
@@ -488,10 +488,8 @@ void EventLoop(){
                     } 
                     logEVal+=logEStep;
                 }
-                cout<<logE_bin<<"\t"<<seedEta_bin<<endl;
 
-
-                if(logE_bin < 0 || seedEta_bin < 0){cout<<"fail\t"<<logE_bin<<"\t"<<seedEta_bin<<endl; continue;}
+                if(logE_bin < 0 || seedEta_bin < 0) continue;
 
                 //fill histograms
                 caloClusters_shape_eBins_etWeight[seedEta_bin][logE_bin] -> Fill(dPhi, dEta, etPF);
