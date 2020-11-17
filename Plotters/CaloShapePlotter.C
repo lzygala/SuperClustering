@@ -39,8 +39,8 @@
 
     double minSeedEta = 0.0, 
            maxSeedEta = 3.0, 
-           minLogE = -2.0, 
-           maxLogE = 1.0;
+           minLogE = -1.0, 
+           maxLogE = 2.0;
     
     double maximum_val = 0.0174;
     double minimum_val = -0.0087;
