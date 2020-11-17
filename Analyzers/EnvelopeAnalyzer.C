@@ -396,7 +396,7 @@ float getThreshold(float seedEta, float seedET){
 
 void EventLoop(){
 //Loops over all events and fills histograms
-    int eventLoopMax = EvMax;
+    int eventLoopMax = 10;//EvMax;
 
     for(int iev=0; iev<eventLoopMax;++iev){
         EventTree->GetEvent(iev);
@@ -452,7 +452,7 @@ void EventLoop(){
             for(int iSeedEta = 0; iSeedEta < seedEtaBins; iSeedEta++){
                 if(fabs(seedEta) >= seedEtaVal && fabs(seedEta) < seedEtaVal + seedEtaStep){
                     seedEta_bin = iSeedEta;
-                    continue;
+                    break;
                 } 
                 seedEtaVal+=seedEtaStep;
             }
@@ -484,7 +484,7 @@ void EventLoop(){
                 for(int iLogE = 0; iLogE < logEBins; iLogE++){
                     if(logE >= logEVal && logE < logEVal + logEStep){
                         logE_bin = iLogE;
-                        continue;
+                        break;
                     } 
                     logEVal+=logEStep;
                 }
